@@ -1,0 +1,86 @@
+//Design a scheduling program that is capable of scheduling many processes that comes in at some time interval and are allocated the CPU not more that 10 time units. CPU must schedule processes having short execution time first. CPU is idle for 3 time units and does not entertain any process prior this time. Scheduler must maintain a queue that keeps the order of execution of all the processes. Compute average waiting and turnaround time.
+
+//--------------------------------------------------------------------------
+//Round robin condition....
+#include<stdio.h>
+#include<unistd.h>
+#include<stdlib.h>
+#include<wait.h>
+#include<sys/types.h>
+int ttime,i,j,temp;
+void rrobin();
+int main()
+{
+int a_t1[10],b_t1[10],a_t[10],b_t[10];
+int n,x,z;
+printf("Enter the no. of process:");
+scanf("%d",&n);
+for(i=0;i<n;i++)
+ {     
+ printf("Enter the arriving and burst time for the process p%d:\n,",i+1);
+ scanf("%d",&a_t[i]);
+ scanf("%d",&b_t[i]);
+}
+printf("PROCESS  \t\t ARRIVING TIME \t\t BURST TIME\n");
+for(i=0;i<n;i++)
+   printf("P%d\t\t\t %d \t\t\t %d\n",i+1,a_t[i],b_t[i]);
+       z=1;
+       while(z==1)
+        {
+ttime=0;
+        for(i=0;i<n;i++)
+        { 
+a_t1[i]=a_t[i];
+            b_t1[i]=b_t[i];
+        }
+rrobin(a_t1,b_t1,n);
+}
+return 0;
+} 
+   
+void rrobin(int a_t1[],int b_t1[],int n)
+{
+int time_quantum=10;
+int wait_time;
+int wait_time1;
+float avg_wait_time;
+float avg_turn_arround;
+int count=0;
+int count1=0;
+j=0;
+printf("\n\t ROUND ROBIN SCHEDULING \n\n");
+printf("PROCESS NAME \t WAITING TIME\t TURNARROUND TIME");
+   while(j<n)
+            { 
+      for(i=0;i<n;i++)
+{
+      if(b_t1[i]>0)
+                  { 
+if(b_t1[i]>=time_quantum)
+                    { 
+ttime+=time_quantum;
+b_t1[i]=b_t1[i]-time_quantum;
+printf("\nP%d\t\t %d \t\t %d",i+1,b_t1[i],ttime);
+if(b_t1[i]==0)
+j++;
+wait_time=b_t1[i]+b_t1[i+1];
+count++;
+sleep(3);
+}
+else
+{ 
+ttime+=b_t1[i];
+b_t1[i]=0; 
+printf("\nP%d\t\t %d \t\t %d",i+1,b_t1[i],ttime);
+wait_time1=b_t1[i]+b_t1[i+1];
+count1++;
+sleep(3);
+}}}}
+avg_wait_time=(wait_time+wait_time1)/(count+count1);
+avg_turn_arround=ttime/(count+count1);
+printf("\nAverage Waiting Time= %.2f\n",avg_wait_time/n); 
+printf("Average Turnaround Time = %.2f",avg_turn_arround/n); 
+  
+}
+
+
